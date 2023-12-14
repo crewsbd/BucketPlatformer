@@ -1,6 +1,7 @@
 import math
 import os
 
+import pymunk
 import arcade
 import pytiled_parser
 
@@ -24,16 +25,9 @@ class GameView(arcade.View):
         self.input_manager = None
         self.player_camera = None
         self.ui_camera = None
-
+        self.player_spawn = (0,0)
         self.score = 0
 
-        self.sounds = {}
-        self.sounds["player_shoot"] = arcade.load_sound(
-            "./resources/sound/player_shoot.wav"
-        )
-        self.sounds["player_jump"] = arcade.load_sound(
-            "./resources/sound/player_jump.wav"
-        )
         self.background_images = arcade.SpriteList()
         self.background_images.append(
             arcade.Sprite("./resources/image/Background.png", scale=GAME_SCALE * 1.1)
@@ -99,6 +93,8 @@ class GameView(arcade.View):
             if spawn.properties["type"] == "player_spawn":
                 self.player.center_x = spawn.shape[X_CORD]
                 self.player.center_y = spawn.shape[Y_CORD]
+                self.player_spawn = (spawn.shape[X_CORD], spawn.shape[Y_CORD])
+
             if spawn.properties["type"] == "enemy_spawn":
                 new_enemy = Quid(
                 "./resources/image/Quid_Right.png",
@@ -167,6 +163,10 @@ class GameView(arcade.View):
                     direction = (velocity[0]/abs(velocity[0]))
                 
                 self.physics_engine.apply_force(self.player, (-direction * 9800, 0))
+
+        # Player boundary handling
+        if self.player.position[Y_CORD] < 0:
+            self.player_died()
 
         # Jumping
         if self.input_manager.jump:  # If the player can jump then jump
@@ -237,3 +237,7 @@ class GameView(arcade.View):
             
     
                 
+    def player_died(self):
+        pass
+        self.physics_engine.set_position(self.player, pymunk.vec2d.Vec2d(600, 700) )
+        #self.player.position = (10, 600) #arcade.Point((self.player_spawn[X_CORD], self.player_spawn[Y_CORD]))

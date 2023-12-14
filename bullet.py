@@ -49,6 +49,8 @@ class Bullet(arcade.Sprite):
 
     def update(self): # Updates with the main loop
         super().update()
+
+    
         if self.time_to_live <= 0:
             self.kill()
         
@@ -58,6 +60,11 @@ class Bullet(arcade.Sprite):
         self.texture_id = (self.texture_id + (1/2)) % 4  # That middle number is just the speed factor...It's bad.
         self.texture = self.idle_textures.right[int(math.floor(self.texture_id))]
         self.time_to_live -= delta_time
+
+        if self.facing == arcade.FACE_RIGHT:
+            self.texture = self.idle_textures.right[int(math.floor(self.texture_id))]
+        else:
+            self.texture = self.idle_textures.left[int(math.floor(self.texture_id))]
 
     def kill(self):
         self.alive = False

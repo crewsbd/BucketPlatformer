@@ -72,6 +72,7 @@ class Player(arcade.Sprite):
 
             # Make a new bullet and add it to the right lists
             new_bullet = Bullet("resources/image/Bullet_Right.png",GAME_SCALE, 0,0,8,8,self.center_x + unit_speed*20, self.center_y-10)
+            new_bullet.facing = self.facing # Bullet points in same direction as player.
             bullet_list.append(new_bullet)
             physics.add_sprite(new_bullet)
             physics.apply_impulse(new_bullet, (unit_speed*2900, 100))
