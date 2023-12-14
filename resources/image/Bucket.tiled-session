@@ -1,0 +1,43 @@
+{
+    "Map/SizeTest": {
+        "height": 4300,
+        "width": 2
+    },
+    "activeFile": "/Users/briancrews/Library/CloudStorage/Dropbox/Pathways/2023/4 Fall SEP-DEC/CSE310-AppliedProgramming/W12-14/Platformer/resources/map/test.tmx",
+    "expandedProjectPaths": [
+    ],
+    "fileStates": {
+        "/Users/briancrews/Library/CloudStorage/Dropbox/Pathways/2023/4 Fall SEP-DEC/CSE310-AppliedProgramming/W12-14/Platformer/resources/map/test.tmx": {
+            "scale": 3,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 291,
+                "y": 439.16666666666663
+            }
+        },
+        "ApocalypeDirt.tsx": {
+            "scaleInDock": 2,
+            "scaleInEditor": 1
+        }
+    },
+    "last.imagePath": "/Users/briancrews/Library/CloudStorage/Dropbox/Pathways/2023/4 Fall SEP-DEC/CSE310-AppliedProgramming/W12-14/Platformer/resources/image",
+    "map.height": 39,
+    "map.lastUsedFormat": "tmx",
+    "map.tileHeight": 16,
+    "map.tileWidth": 16,
+    "map.width": 46,
+    "openFiles": [
+        "ApocalypeDirt.tsx",
+        "/Users/briancrews/Library/CloudStorage/Dropbox/Pathways/2023/4 Fall SEP-DEC/CSE310-AppliedProgramming/W12-14/Platformer/resources/map/test.tmx"
+    ],
+    "project": "Bucket.tiled-project",
+    "recentFiles": [
+        "ApocalypeDirt.tsx",
+        "/Users/briancrews/Library/CloudStorage/Dropbox/Pathways/2023/4 Fall SEP-DEC/CSE310-AppliedProgramming/W12-14/Platformer/resources/map/test.tmx"
+    ],
+    "tileset.lastUsedFormat": "tsx",
+    "tileset.tileSize": {
+        "height": 16,
+        "width": 16
+    }
+}
