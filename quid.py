@@ -7,6 +7,11 @@ from settings import *
 from helpers import *
 
 class Quid(arcade.Sprite):
+    """This is the sprite class for the enemy quids.
+
+    Args:
+        arcade (arcade.Sprite): This is the base class that quid is derived from
+    """
     def __init__(
         self,
         image_file: str,
@@ -41,7 +46,7 @@ class Quid(arcade.Sprite):
         self.idle_textures.left = arcade.load_spritesheet("resources/image/Quid_Left.png",32,32,8,8,0,None)
 
 
-    def jump(self):
+    def jump(self): # They don't jump yet.  Some day...
         if self.jump_reset:
             self.change_y = 10  # TODO: Remove this hard code
             self.jump_reset = (

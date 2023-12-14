@@ -7,6 +7,11 @@ from settings import *
 from helpers import *
 
 class Bullet(arcade.Sprite):
+    """The bullet class
+
+    Args:
+        arcade (arcade.Sprite): The base class Bullet is derived from
+    """
     def __init__(
         self,
         image_file: str,

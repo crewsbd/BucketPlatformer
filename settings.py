@@ -1,3 +1,6 @@
+"""Setting for the game
+"""
+
 GAME_TITLE = "BUCKET"
 DEBUG = False
 

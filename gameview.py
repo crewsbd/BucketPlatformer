@@ -92,7 +92,7 @@ class GameView(arcade.View):
         #     walls=self.scene["Platforms"]
         # )
         self.physics_engine = arcade.PymunkPhysicsEngine(gravity=(0, -1500))
-        self.physics_engine.add_sprite(
+        self.physics_engine.add_sprite(  # Add the player
             self.player,
             mass=10,
             friction=0.1,
@@ -102,7 +102,7 @@ class GameView(arcade.View):
             max_vertical_velocity=500,
             damping=.99, elasticity=.5
         )
-        # Spawn things
+        # Spawn things from the map file
         for spawn in self.map.object_lists["Spawn Points"]:
             if spawn.properties["type"] == "player_spawn":
                 self.player.center_x = spawn.shape[X_CORD]
@@ -236,7 +236,8 @@ class GameView(arcade.View):
 
 
     def _update_backgrounds(self):
-
+        """This method changes the background image locations in the scene according to the parallax information in the map file.
+        """
         camera = self.player_camera.position # The backgrounds need to track to the camera
 
         for layer in self.map.tiled_map.layers: # Search through all the map layers for "BackgroundXX" where XX is a number
