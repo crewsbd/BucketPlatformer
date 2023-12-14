@@ -40,6 +40,8 @@ class Bullet(arcade.Sprite):
         self.walk_textures = LRTextureList()
         self.jump_textures = LRTextureList()
         self.shoot_textures = LRTextureList()
+        self.alive = True
+        self.time_to_live = 5.0
 
         # Load spritesheets
         self.idle_textures.right = arcade.load_spritesheet("resources/image/Bullet_Right.png",8,8,4,4,0,None)
@@ -47,10 +49,15 @@ class Bullet(arcade.Sprite):
 
     def update(self): # Updates with the main loop
         super().update()
-        self.change_y -= GRAVITY # Fall!
+        if self.time_to_live <= 0:
+            self.kill()
         
             
     def update_animation(self, delta_time: float = 1 / 60):
         super().update_animation(delta_time)
         self.texture_id = (self.texture_id + (1/2)) % 4  # That middle number is just the speed factor...It's bad.
-  
+        self.texture = self.idle_textures.right[int(math.floor(self.texture_id))]
+        self.time_to_live -= delta_time
+
+    def kill(self):
+        self.alive = False

@@ -74,9 +74,7 @@ class GameView(arcade.View):
         # Load the map and set the scene up
         self.map = arcade.load_tilemap(MAP_FILE, TILE_SCALING, layer_options)
         self.scene = arcade.Scene.from_tilemap(self.map)
-        
-        
-        
+    
         
         self.scene.add_sprite_list("Bullets")
         self.scene.add_sprite("Player", self.player)
@@ -85,12 +83,6 @@ class GameView(arcade.View):
         if self.map.background_color:
             arcade.set_background_color(self.map.background_color)
 
-        # self.physics_engine = arcade.PhysicsEnginePlatformer(
-        #     self.player,
-        #     platforms=self.scene["Moving Platforms"],
-        #     gravity_constant=GRAVITY,
-        #     walls=self.scene["Platforms"]
-        # )
         self.physics_engine = arcade.PymunkPhysicsEngine(gravity=(0, -1500))
         self.physics_engine.add_sprite(  # Add the player
             self.player,
@@ -120,7 +112,7 @@ class GameView(arcade.View):
                 )
                 new_enemy.set_hit_box([(0,-16), (10,-14), (16,0), (-16,0), (-10, -14)])
                 self.scene.add_sprite("Enemies", new_enemy)
-                self.physics_engine.add_sprite(new_enemy, mass=10, moment=arcade.PymunkPhysicsEngine.MOMENT_INF, collision_type="item", body_type=arcade.PymunkPhysicsEngine.DYNAMIC)
+                self.physics_engine.add_sprite(new_enemy, mass=10, moment=arcade.PymunkPhysicsEngine.MOMENT_INF, collision_type="item", body_type=arcade.PymunkPhysicsEngine.KINEMATIC)
         
 
    
@@ -158,7 +150,8 @@ class GameView(arcade.View):
             delta_time (float): The amount of time that has elapsed since the last update
         """
 
-        # Player logic
+        # Player logic---------------------
+        # Directional movement
         if self.input_manager.right and not self.input_manager.left: # No two button action
             self.physics_engine.apply_force(self.player, (16800, 0))
             self.player.facing = arcade.FACE_RIGHT
@@ -174,42 +167,24 @@ class GameView(arcade.View):
                     direction = (velocity[0]/abs(velocity[0]))
                 
                 self.physics_engine.apply_force(self.player, (-direction * 9800, 0))
+
+        # Jumping
         if self.input_manager.jump:  # If the player can jump then jump
             if self.physics_engine.is_on_ground(self.player) and self.player.jump_reset:
-                self.physics_engine.apply_impulse(self.player, (0, 8000))
-                # self.player.jump()
-                arcade.play_sound(self.sounds["player_jump"])
+                self.player.jump(self.physics_engine)
         else:
-            # if self.physics_engine.can_jump(5): # No mid-air reset
             if self.physics_engine.is_on_ground(self.player):  # NEW PYMUNK ENGINE MORE GOOD
                 self.player.jump_reset = True  # The jump option is available again because the key was released
 
+        # Shooting
         if self.input_manager.shoot:
-            unit_speed = 1
-            if self.player.facing == arcade.FACE_LEFT:
-                unit_speed = -unit_speed
-            
-            new_bullet = Bullet("resources/image/Bullet_Right.png",GAME_SCALE, 0,0,8,8,self.player.center_x + unit_speed*20, self.player.center_y-10)
-            self.scene.add_sprite("Bullets", new_bullet)
-            self.physics_engine.add_sprite(new_bullet)
-            self.physics_engine.apply_impulse(new_bullet, (unit_speed*2500, 0))
-
-        # Player collisions
-
-        # Enemy physics (collision mostly)
-        # enemy: Quid
-        # for enemy in self.scene["Enemies"]:
-        #     if enemy.collides_with_list(self.scene["Platforms"]):
-        #         enemy.center_x = (
-        #             enemy.center_x - enemy.change_x
-        #         )  # Rewind the physics.  Cheap but acceptable approximation until something better comes along.
-        #         enemy.center_y = enemy.center_y - enemy.change_y
+            self.player.shoot(self.scene.get_sprite_list("Bullets"), self.physics_engine)
 
         # Update stuff
   
         self.physics_engine.step()
-        self.scene.update(["Player", "Enemies"])
-        self.scene.update_animation(delta_time, ["Player", "Enemies"])
+        self.scene.update(["Player", "Enemies", "Bullets"])
+        self.scene.update_animation(delta_time, ["Player", "Enemies", "Bullets"])
         self.player_camera.move_to(
             (
                 self.player.camera_target[X_CORD] - SCREEN_WIDTH / 2,
@@ -218,6 +193,15 @@ class GameView(arcade.View):
             0.09,
         )
         self._update_backgrounds()
+
+        #Cleanup dead things
+        sprite_list = self.scene.get_sprite_list("Bullets")
+
+        for entity in reversed(sprite_list):
+            if not entity.alive: # Remove dead entities
+                sprite_list.remove(entity)
+                self.physics_engine.remove_sprite(entity)
+
 
 
 

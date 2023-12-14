@@ -40,6 +40,7 @@ class Quid(arcade.Sprite):
         self.walk_textures = LRTextureList()
         self.jump_textures = LRTextureList()
         self.shoot_textures = LRTextureList()
+        self.alive = True
 
         # Load spritesheets
         self.idle_textures.right = arcade.load_spritesheet("resources/image/Quid_Right.png",32,32,8,8,0,None)
@@ -66,3 +67,5 @@ class Quid(arcade.Sprite):
             self.texture = self.idle_textures.right[int(math.floor(self.texture_id))]
         else:
             self.texture = self.idle_textures.left[int(math.floor(self.texture_id))]
+    def kill(self):
+        self.alive = False
