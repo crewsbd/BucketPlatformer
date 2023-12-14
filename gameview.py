@@ -10,6 +10,7 @@ from inputmanager import InputManager
 
 from player import Player
 from quid import Quid
+from bullet import Bullet
 
 
 class GameView(arcade.View):
@@ -158,10 +159,10 @@ class GameView(arcade.View):
         """
 
         # Player logic
-        if self.input_manager.right:
+        if self.input_manager.right and not self.input_manager.left: # No two button action
             self.physics_engine.apply_force(self.player, (16800, 0))
             self.player.facing = arcade.FACE_RIGHT
-        elif self.input_manager.left:
+        elif self.input_manager.left and not self.input_manager.right:
             self.physics_engine.apply_force(self.player, (-16800, 0))
             self.player.facing = arcade.FACE_LEFT
         else: # Apply stopping force
@@ -183,6 +184,16 @@ class GameView(arcade.View):
             if self.physics_engine.is_on_ground(self.player):  # NEW PYMUNK ENGINE MORE GOOD
                 self.player.jump_reset = True  # The jump option is available again because the key was released
 
+        if self.input_manager.shoot:
+            unit_speed = 1
+            if self.player.facing == arcade.FACE_LEFT:
+                unit_speed = -unit_speed
+            
+            new_bullet = Bullet("resources/image/Bullet_Right.png",GAME_SCALE, 0,0,8,8,self.player.center_x + unit_speed*20, self.player.center_y-10)
+            self.scene.add_sprite("Bullets", new_bullet)
+            self.physics_engine.add_sprite(new_bullet)
+            self.physics_engine.apply_impulse(new_bullet, (unit_speed*2500, 0))
+
         # Player collisions
 
         # Enemy physics (collision mostly)
@@ -195,7 +206,7 @@ class GameView(arcade.View):
         #         enemy.center_y = enemy.center_y - enemy.change_y
 
         # Update stuff
-        # self.physics_engine.update()
+  
         self.physics_engine.step()
         self.scene.update(["Player", "Enemies"])
         self.scene.update_animation(delta_time, ["Player", "Enemies"])
@@ -226,23 +237,18 @@ class GameView(arcade.View):
 
     def _update_backgrounds(self):
 
-        bg = self.map.get_tilemap_layer("Background")
-        camera = self.player_camera.position
-        
-        # print(bg.offset)
-        # bg.offset = pytiled_parser.OrderedPair(camera.x, camera.y)
-   
-        #self.map.tiled_map.layers[1].name
+        camera = self.player_camera.position # The backgrounds need to track to the camera
 
-        for layer in self.map.tiled_map.layers: # Search through all the map layers for backgrounds
+        for layer in self.map.tiled_map.layers: # Search through all the map layers for "BackgroundXX" where XX is a number
             if layer.name[0:-2] == "Background": # Is it a background?
-                parallax_x = 1 - layer.parallax_factor.x
+                parallax_x = 1 - layer.parallax_factor.x # Get parallax factors from map layer
                 parallax_y = 1 - layer.parallax_factor.y
-                offset_x = layer.offset.x
+                offset_x = layer.offset.x #Get offsets from map layer
                 offset_y = layer.offset.y
                 sprites = self.scene[layer.name].sprite_list #If it's in the map, it's in the scene I assume.
-                for sprite in sprites:
+                for sprite in sprites: # Update each background sprite location to the new caluculated position.
                     sprite.center_x = camera.x * parallax_x + offset_x * GAME_SCALE + SCREEN_WIDTH
                     sprite.center_y = camera.y * parallax_y - offset_y * GAME_SCALE + 100
+            
     
                 
