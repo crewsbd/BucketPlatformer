@@ -3,7 +3,6 @@
  <image source="ApocalypseDirt.png" width="176" height="80"/>
  <tile id="0">
   <objectgroup draworder="index" id="2">
-   <object id="2" x="0" y="0" width="16" height="16"/>
    <object id="3" x="8.5" y="2.25">
     <polygon points="-4.75,-1.25 -7.5,2.5 -8.5,13.75 7.5,13.75 7.5,-2.25"/>
    </object>
@@ -20,7 +19,7 @@
  <tile id="2">
   <objectgroup draworder="index" id="2">
    <object id="1" x="1" y="1">
-    <polygon points="-1,-1 8.75,0 14.25,4.75 15,15 -1,15"/>
+    <polygon points="-1,-1 8.56818,0 14.0682,4.75 15,15 -1,15"/>
    </object>
   </objectgroup>
  </tile>

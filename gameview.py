@@ -66,8 +66,9 @@ class GameView(arcade.View):
             },
         }
         # Load the map and set the scene up
-        self.map = arcade.load_tilemap(MAP_FILE, TILE_SCALING, layer_options)
+        self.map = arcade.load_tilemap(MAP_FILE, TILE_SCALING, layer_options, hit_box_algorithm="Detailed", hit_box_detail=2.0)
         self.scene = arcade.Scene.from_tilemap(self.map)
+        self.load_collision_geometry()
     
         
         self.scene.add_sprite_list("Bullets")
@@ -85,8 +86,8 @@ class GameView(arcade.View):
             moment=arcade.PymunkPhysicsEngine.MOMENT_INF,
             collision_type="player",
             max_horizontal_velocity=500,
-            max_vertical_velocity=500,
-            damping=.99, elasticity=.5
+            max_vertical_velocity=700,
+            damping=.99, elasticity=.1
         )
         # Spawn things from the map file
         for spawn in self.map.object_lists["Spawn Points"]:
@@ -106,9 +107,9 @@ class GameView(arcade.View):
                 center_x=spawn.shape[X_CORD],
                 center_y=spawn.shape[Y_CORD],   
                 )
-                new_enemy.set_hit_box([(0,-16), (10,-14), (16,0), (-16,0), (-10, -14)])
+                new_enemy.set_hit_box([(0,-16), (10,-14), (11,0), (-11,0), (-10, -14)])
                 self.scene.add_sprite("Enemies", new_enemy)
-                self.physics_engine.add_sprite(new_enemy, mass=10, moment=arcade.PymunkPhysicsEngine.MOMENT_INF, collision_type="item", body_type=arcade.PymunkPhysicsEngine.KINEMATIC)
+                self.physics_engine.add_sprite(new_enemy, mass=10, moment=arcade.PymunkPhysicsEngine.MOMENT_INF)
         
 
    
@@ -241,3 +242,29 @@ class GameView(arcade.View):
         pass
         self.physics_engine.set_position(self.player, pymunk.vec2d.Vec2d(600, 700) )
         #self.player.position = (10, 600) #arcade.Point((self.player_spawn[X_CORD], self.player_spawn[Y_CORD]))
+
+    def load_collision_geometry(self):
+        #tileset = self.map.tiled_map.tilesets
+        
+        tile_sprites = self.scene["Platforms"].sprite_list # The platforms layer
+        tile_set = self.map.tiled_map.tilesets[1] # The tile set. Need to get the tiles from here.
+        
+        for sprite in tile_sprites:
+            print(f"GUID: {sprite}")
+            print(f"TEXTURE: {sprite.texture.name}")
+            
+
+    
+        # Explore the tile map and the collision geometry
+        tile: pytiled_parser.tileset.Tile = None
+        for tile in tile_set.tiles.values():
+
+            print(f"TILE {tile.id} HAS ")
+            objects: pytiled_parser.layer.ObjectLayer = tile.objects
+
+            for shape in objects.tiled_objects:
+                if type(shape) == pytiled_parser.tiled_object.Polygon:
+                    for point in shape.points:
+                        print(f"{point[X_CORD]}, {point[Y_CORD]}")
+
+        print(tile_set.name)

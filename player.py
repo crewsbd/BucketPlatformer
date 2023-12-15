@@ -59,7 +59,7 @@ class Player(arcade.Sprite):
         """
         if self.jump_reset:
             self.change_y = 10  # TODO: Remove this hard code
-            physics.apply_impulse(self, (0, 8000))
+            physics.apply_impulse(self, (0, 23000))
             arcade.play_sound(self.jump_sound)
             self.jump_reset = False  # Jumping will reset when we let go of the jump button
 

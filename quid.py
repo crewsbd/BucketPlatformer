@@ -56,7 +56,7 @@ class Quid(arcade.Sprite):
 
     def update(self): # Updates with the main loop
         super().update()
-        self.change_y -= GRAVITY
+        #self.change_y -= GRAVITY
         
             
     def update_animation(self, delta_time: float = 1 / 60):
